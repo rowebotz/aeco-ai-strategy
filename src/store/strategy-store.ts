@@ -1,28 +1,52 @@
 import { create } from 'zustand';
-import { UserInputs, ScoredUseCase, calculatePriorities, RevenueBand } from '@/lib/scoring-engine';
+import { UserInputs, ScoredUseCase, calculatePriorities } from '@/lib/scoring-engine';
 import { AECO_USE_CASES, StrategicObjective } from '@/data/aeco-use-cases';
 interface StrategyState {
   inputs: UserInputs;
   scoredCases: ScoredUseCase[];
   isAnalyzed: boolean;
+  // Comparison State
+  comparisonMode: boolean;
+  baselineScenario: { inputs: UserInputs; results: ScoredUseCase[] } | null;
+  // Actions
   setInputs: (inputs: Partial<UserInputs>) => void;
   analyze: () => void;
-  reset: () => void;
+  snapshotBaseline: () => void;
+  setComparisonMode: (active: boolean) => void;
+  reset: (preserveProfile?: boolean) => void;
 }
+const STORAGE_KEY = 'aeco-ai-strategy-v1';
 const defaultInputs: UserInputs = {
   sector: '',
   revenue: 'Medium',
   maturity: 3,
   objective: 'Operational Efficiency' as StrategicObjective,
-  painPoints: []
+  painPoints: [],
+  painPointsText: ''
+};
+const getPersistedData = () => {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : null;
+  } catch {
+    return null;
+  }
 };
 export const useStrategyStore = create<StrategyState>((set, get) => ({
-  inputs: defaultInputs,
+  inputs: getPersistedData()?.inputs || defaultInputs,
   scoredCases: [],
   isAnalyzed: false,
-  setInputs: (newInputs) => set((state) => ({
-    inputs: { ...state.inputs, ...newInputs }
-  })),
+  comparisonMode: false,
+  baselineScenario: getPersistedData()?.baselineScenario || null,
+  setInputs: (newInputs) => {
+    const updatedInputs = { ...get().inputs, ...newInputs };
+    set({ inputs: updatedInputs });
+    // Persistence
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      inputs: updatedInputs,
+      baselineScenario: get().baselineScenario
+    }));
+  },
   analyze: () => {
     try {
       const { inputs } = get();
@@ -32,5 +56,30 @@ export const useStrategyStore = create<StrategyState>((set, get) => ({
       console.error("Strategy Analysis Failed", error);
     }
   },
-  reset: () => set({ inputs: defaultInputs, scoredCases: [], isAnalyzed: false })
+  snapshotBaseline: () => {
+    const { inputs, scoredCases } = get();
+    const baseline = { inputs: { ...inputs }, results: [...scoredCases] };
+    set({ baselineScenario: baseline });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      inputs: inputs,
+      baselineScenario: baseline
+    }));
+  },
+  setComparisonMode: (active) => set({ comparisonMode: active }),
+  reset: (preserveProfile = false) => {
+    const profile = preserveProfile ? { 
+      sector: get().inputs.sector, 
+      revenue: get().inputs.revenue, 
+      maturity: get().inputs.maturity 
+    } : {};
+    const newInputs = { ...defaultInputs, ...profile };
+    set({ 
+      inputs: newInputs, 
+      scoredCases: [], 
+      isAnalyzed: false, 
+      comparisonMode: false,
+      baselineScenario: preserveProfile ? get().baselineScenario : null
+    });
+    localStorage.removeItem(STORAGE_KEY);
+  }
 }));
