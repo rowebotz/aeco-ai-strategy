@@ -1,4 +1,3 @@
-import "@/lib/errorReporter";
 import { enableMapSet } from "immer";
 enableMapSet();
 
