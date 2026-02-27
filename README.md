@@ -1,179 +1,94 @@
-# Cloudflare React Starter
+# AECO AI Strategy Canvas
 
-A production-ready full-stack React application template powered by Cloudflare Workers. Features a modern React SPA with server-side rendering support via Workers, Tailwind CSS, shadcn/ui components, and TypeScript. Perfect for rapid development of performant, globally distributed web apps.
+A strategic decision-support tool designed to help architecture, engineering, construction, and operations leaders prioritize applied AI investments with clarity and discipline.
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/rowebotz/aeco-ai-strategy)
+This is not a demo chatbot. It is a structured strategy framework that translates AI capabilities into ranked, outcome-driven recommendations using transparent scoring logic.
 
-## ✨ Features
+**Live Site**  
+https://rowebotz.github.io/aeco-ai-strategy/
 
-- **Modern React Stack**: React 18, React Router, TanStack Query, Zustand
-- **Styling**: Tailwind CSS with shadcn/ui components, dark mode support
-- **Backend**: Hono-based Cloudflare Workers API routes
-- **Build Tools**: Vite for blazing-fast development and builds
-- **Developer Experience**: Hot reload, auto-formatting, ESLint, TypeScript
-- **Performance**: Optimized for edge deployment, code splitting, source maps
-- **Error Handling**: Built-in error boundaries, client/server error reporting
-- **Responsive**: Mobile-first design with responsive utilities
-- **Icons**: Lucide React for 2000+ consistent icons
-- **Charts**: Recharts integration for data visualization
-- **Forms**: React Hook Form + Zod validation
+---
 
-## 🛠️ Tech Stack
+## What This Tool Does
 
-| Category | Technologies |
-|----------|--------------|
-| **Frontend** | React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui |
-| **State** | Zustand, TanStack Query, React Hook Form |
-| **UI** | Radix UI, Headless UI, Framer Motion, Sonner |
-| **Backend** | Cloudflare Workers, Hono, Pino logging |
-| **Charts** | Recharts |
-| **Deployment** | Cloudflare Pages/Workers, Bun |
+The AECO AI Strategy Canvas evaluates:
 
-## 🚀 Quick Start
+- Industry segment  
+- Digital maturity level  
+- Strategic objective  
 
-```bash
-# Clone the project (or use the deploy button above)
-git clone <your-repo>
-cd aeco-ai-strategy-can-vmpfhb-csa9qonyns6maz
+It then applies a weighted scoring model to identify and rank high-impact AI use cases across planning, design, construction, and operations.
 
-# Install dependencies using Bun
-bun install
+The output includes:
 
-# Start development server
-bun run dev
-```
+- Prioritized AI initiatives  
+- ROI-weighted scoring logic  
+- Implementation complexity indicators  
+- A phased roadmap (Immediate, Mid-Term, Long-Term)  
 
-Open [http://localhost:3000](http://localhost:3000) to view the app.
+The goal is to help executive teams move from AI exploration to disciplined portfolio decisions.
 
-## 📚 Development
+---
 
-| Script | Description |
-|--------|-------------|
-| `bun run dev` | Start dev server on port 3000 |
-| `bun run build` | Build for production |
-| `bun run lint` | Run ESLint |
-| `bun run preview` | Preview production build |
-| `bun run cf-typegen` | Generate Cloudflare Workers types |
+## Why This Exists
 
-### Project Structure
+AI in AECO is shifting from experimentation to operational impact. Most firms struggle with:
 
-```
-src/
-├── components/     # Reusable UI components (shadcn/ui)
-├── hooks/         # Custom React hooks
-├── lib/           # Shared utilities
-├── pages/         # Route components
-└── main.tsx       # App entry point
-worker/            # Cloudflare Workers API routes
-```
+- Fragmented AI initiatives  
+- Unclear ROI prioritization  
+- Misalignment between digital maturity and ambition  
+- Hype-driven investment decisions  
 
-### Adding API Routes
+This tool demonstrates how structured strategy, not hype, should drive AI investment.
 
-Add custom routes in `worker/userRoutes.ts`:
+---
 
-```ts
-import { userRoutes } from './userRoutes';
+## Strategic Framework
 
-app.get('/api/users', (c) => c.json({ users: [...] }));
-```
+The ranking engine uses a weighted model:
 
-### Styling
+- 40% Strategic Objective Alignment  
+- 30% Digital Maturity Fit  
+- 30% Base ROI / Value Potential  
 
-- Use `className` prop with Tailwind utilities
-- shadcn/ui components in `src/components/ui/*`
-- Custom animations in `tailwind.config.js`
+The methodology is intentionally transparent to support executive-level conversations.
 
-```tsx
-import { Button } from '@/components/ui/button'
+---
 
-<Button className="btn-gradient">Custom Button</Button>
-```
+## Tech Stack
 
-## ☁️ Deployment
+**Frontend**  
+React 18  
+TypeScript  
+Vite  
+Tailwind CSS  
 
-Deploy to Cloudflare with one command:
+**State and Routing**  
+React Router  
+Zustand  
+
+**Deployment**  
+GitHub Pages  
+Bun  
+
+The application is built as a static SPA for portability and simplicity.
+
+---
+
+## Local Development
+
+Clone the repository:
 
 ```bash
-bun run deploy
-```
+git clone https://github.com/rowebotz/aeco-ai-strategy.git
+cd aeco-ai-strategy
 
-This builds the app and deploys to your Cloudflare Workers/Pages project.
+---
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/rowebotz/aeco-ai-strategy)
+## Author
 
-**Configuration**: Edit `wrangler.jsonc` for custom settings.
+Stephen Rowe
+Digital strategist focused on applied AI, systems thinking, and executive-level technology strategy.
 
-### CI/CD
-
-Add to your GitHub Actions:
-
-```yaml
-name: Deploy
-on: [push]
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
-      - run: bun install
-      - run: bun run deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-```
-
-## 📖 Usage
-
-### Routing
-
-Uses `createBrowserRouter` for data loading and error handling:
-
-```tsx
-// src/main.tsx
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <HomePage />,
-    errorElement: <RouteErrorBoundary />,
-  },
-]);
-```
-
-### Error Handling
-
-Built-in error boundaries with automatic reporting:
-
-```tsx
-<ErrorBoundary>
-  <RouterProvider router={router} />
-</ErrorBoundary>
-```
-
-### Theme
-
-```tsx
-import { useTheme } from '@/hooks/use-theme'
-
-const { isDark, toggleTheme } = useTheme()
-```
-
-### API Calls
-
-```tsx
-// Client-side with TanStack Query
-const { data } = useQuery({
-  queryKey: ['users'],
-  queryFn: () => fetch('/api/users').then(res => res.json()),
-});
-```
-
-## 🤝 Contributing
-
-1. Fork the project
-2. Create your feature branch (`bun run dev`)
-3. Commit changes (`bun run lint`)
-4. Push and open PR
-
-## 📄 License
-
-MIT - See [LICENSE](LICENSE) for details.
+Website:
+https://www.digitalrowe.com
