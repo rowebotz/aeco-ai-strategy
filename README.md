@@ -2,7 +2,7 @@
 
 A production-ready full-stack React application template powered by Cloudflare Workers. Features a modern React SPA with server-side rendering support via Workers, Tailwind CSS, shadcn/ui components, and TypeScript. Perfect for rapid development of performant, globally distributed web apps.
 
-[cloudflarebutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/rowebotz/aeco-ai-strategy)
 
 ## ✨ Features
 
@@ -99,7 +99,7 @@ bun run deploy
 
 This builds the app and deploys to your Cloudflare Workers/Pages project.
 
-[cloudflarebutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/rowebotz/aeco-ai-strategy)
 
 **Configuration**: Edit `wrangler.jsonc` for custom settings.
 
