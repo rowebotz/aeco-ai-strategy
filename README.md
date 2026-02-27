@@ -75,16 +75,6 @@ The application is built as a static SPA for portability and simplicity.
 
 ---
 
-## Local Development
-
-Clone the repository:
-
-```bash
-git clone https://github.com/rowebotz/aeco-ai-strategy.git
-cd aeco-ai-strategy ```
-
----
-
 ## Author
 
 Stephen Rowe
