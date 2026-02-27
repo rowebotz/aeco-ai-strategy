@@ -1,11 +1,10 @@
 import React from 'react';
-import { useShallow } from 'zustand/react/shallow';
 import { useStrategyStore } from '@/store/strategy-store';
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Zap, Clock, ShieldCheck } from 'lucide-react';
 export function DeploymentRoadmap() {
-  const scoredCases = useStrategyStore(useShallow(s => s.scoredCases));
+  const scoredCases = useStrategyStore(s => s.scoredCases);
   const phase1 = scoredCases.filter(c => c.complexity <= 4).slice(0, 3);
   const phase2 = scoredCases.filter(c => c.complexity > 4 && c.complexity <= 7).slice(0, 3);
   const phase3 = scoredCases.filter(c => c.complexity > 7).slice(0, 3);
