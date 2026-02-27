@@ -11,7 +11,10 @@ import { StrategicObjective } from '@/data/aeco-use-cases';
 import { RevenueBand } from '@/lib/scoring-engine';
 import { Sparkles, BarChart2, Info } from 'lucide-react';
 export function InputPanel() {
-  const inputs = useStrategyStore(s => s.inputs);
+  const sector = useStrategyStore(s => s.inputs.sector);
+  const revenue = useStrategyStore(s => s.inputs.revenue);
+  const maturity = useStrategyStore(s => s.inputs.maturity);
+  const objective = useStrategyStore(s => s.inputs.objective);
   const setInputs = useStrategyStore(s => s.setInputs);
   const analyze = useStrategyStore(s => s.analyze);
   const objectives: { label: StrategicObjective; description: string }[] = [
@@ -38,7 +41,7 @@ export function InputPanel() {
         <CardContent className="space-y-8">
           <div className="space-y-4">
             <Label htmlFor="sector-select">Industry Segment</Label>
-            <Select value={inputs.sector} onValueChange={(v) => setInputs({ sector: v })}>
+            <Select value={sector} onValueChange={(v) => setInputs({ sector: v })}>
               <SelectTrigger id="sector-select" aria-label="Select your industry segment">
                 <SelectValue placeholder="Select sector..." />
               </SelectTrigger>
@@ -53,7 +56,7 @@ export function InputPanel() {
           </div>
           <div className="space-y-4">
             <Label htmlFor="revenue-select">Revenue Band (Annual)</Label>
-            <Select value={inputs.revenue} onValueChange={(v: RevenueBand) => setInputs({ revenue: v })}>
+            <Select value={revenue} onValueChange={(v: RevenueBand) => setInputs({ revenue: v })}>
               <SelectTrigger id="revenue-select" aria-label="Select annual revenue band">
                 <SelectValue placeholder="Select revenue..." />
               </SelectTrigger>
@@ -77,10 +80,10 @@ export function InputPanel() {
                   </TooltipContent>
                 </Tooltip>
               </Label>
-              <span className="font-mono text-sm bg-electricBlue/10 text-electricBlue px-2 py-0.5 rounded font-bold">Level {inputs.maturity}</span>
+              <span className="font-mono text-sm bg-electricBlue/10 text-electricBlue px-2 py-0.5 rounded font-bold">Level {maturity}</span>
             </div>
             <Slider
-              value={[inputs.maturity]}
+              value={[maturity]}
               onValueChange={([v]) => setInputs({ maturity: v })}
               max={5}
               min={1}
@@ -98,7 +101,7 @@ export function InputPanel() {
           <div className="space-y-4">
             <Label>Strategic North Star</Label>
             <RadioGroup
-              value={inputs.objective}
+              value={objective}
               onValueChange={(v) => setInputs({ objective: v as StrategicObjective })}
               className="grid grid-cols-1 gap-3"
             >
@@ -119,7 +122,7 @@ export function InputPanel() {
           </div>
           <Button
             onClick={analyze}
-            disabled={!inputs.sector}
+            disabled={!sector}
             className="w-full bg-electricBlue hover:bg-electricBlue/90 h-12 text-base font-semibold shadow-lg transition-transform active:scale-[0.98]"
           >
             <BarChart2 className="mr-2 h-5 w-5" />

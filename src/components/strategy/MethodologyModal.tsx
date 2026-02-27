@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { Calculator, Percent, Layers, AlertCircle } from 'lucide-react';
+import { Calculator, Percent, Layers, AlertCircle, Info } from 'lucide-react';
 interface MethodologyModalProps {
   trigger?: React.ReactNode;
 }

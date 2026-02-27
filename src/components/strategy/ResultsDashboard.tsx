@@ -1,14 +1,15 @@
 import React from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useStrategyStore } from '@/store/strategy-store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Trophy, TrendingUp, Zap, Download, Activity } from 'lucide-react';
+import { Trophy, Download, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 export function ResultsDashboard() {
-  const scoredCases = useStrategyStore(s => s.scoredCases);
+  const scoredCases = useStrategyStore(useShallow(s => s.scoredCases));
   const top3 = scoredCases.slice(0, 3);
   const chartData = scoredCases.slice(0, 8).map(c => ({
     name: c.title.length > 20 ? c.title.substring(0, 17) + '...' : c.title,
@@ -18,7 +19,7 @@ export function ResultsDashboard() {
   }));
   const handleExportCSV = () => {
     const headers = "Rank,Title,Category,Score,ROI,Complexity,Implementation Weeks\n";
-    const rows = scoredCases.slice(0, 10).map((c, i) => 
+    const rows = scoredCases.slice(0, 10).map((c, i) =>
       `${i+1},"${c.title}","${c.category}",${c.score},${c.baseROI},${c.complexity},${c.estimatedImplementationWeeks}`
     ).join("\n");
     const blob = new Blob([headers + rows], { type: 'text/csv' });

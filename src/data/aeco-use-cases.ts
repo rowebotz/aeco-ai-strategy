@@ -178,7 +178,7 @@ export const AECO_USE_CASES: UseCase[] = [
     category: 'Design',
     baseROI: 7,
     complexity: 7,
-    strategicTags: ['Sustainability', 'Design'],
+    strategicTags: ['Sustainability', 'Operational Efficiency'],
     estimatedImplementationWeeks: 10
   },
   {
