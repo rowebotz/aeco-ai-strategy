@@ -15,13 +15,15 @@ import { HomePage } from '@/pages/HomePage'
 
 const queryClient = new QueryClient();
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <HomePage />,
-    errorElement: <RouteErrorBoundary />,
-  },
+import { createHashRouter, RouterProvider } from "react-router-dom";
+
+const router = createHashRouter([
+  { path: "/", element: <HomePage /> },
+  { path: "/methodology", element: <MethodologyPage /> },
+  // etc
 ]);
+
+root.render(<RouterProvider router={router} />);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
