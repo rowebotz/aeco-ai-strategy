@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import { RotateCcw, Building2, ChevronLeft, Download, FileText } from 'lucide-react';
+import { RotateCcw, Building2, ChevronLeft, FileText } from 'lucide-react';
 export function HomePage() {
   const isAnalyzed = useStrategyStore(s => s.isAnalyzed);
   const reset = useStrategyStore(s => s.reset);
@@ -61,7 +61,8 @@ export function HomePage() {
               <div className="lg:col-span-7 space-y-8">
                 <div className="space-y-4">
                   <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
-                    Stop the AI Hype. <br />
+                    Stop the AI Hype.
+                    <div className="h-1" />
                     <span className="text-electricBlue">Plan with Precision.</span>
                   </h2>
                   <p className="text-lg text-muted-foreground max-w-xl">
@@ -141,14 +142,8 @@ export function HomePage() {
         </AnimatePresence>
       </main>
       <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-200 mt-12">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-sm text-muted-foreground font-mono">
-            © 2024 AECO AI Strategy Engine • INTERNAL PLANNING TOOL | <a href="https://digitalrowe.com" target="_blank" rel="noreferrer" className="underline hover:text-electricBlue">digitalrowe.com</a>
-          </div>
-          <div className="flex gap-8 text-xs uppercase font-bold tracking-widest text-muted-foreground">
-            <a href="#" className="hover:text-charcoal transition-colors">Documentation</a>
-            <a href="#" className="hover:text-charcoal transition-colors">Support</a>
-          </div>
+        <div className="text-sm text-muted-foreground font-mono">
+          Stephen Rowe's Autodesk AI Job Application
         </div>
       </footer>
     </div>
