@@ -1,7 +1,8 @@
 import { UseCase, StrategicObjective } from "@/data/aeco-use-cases";
+export type RevenueBand = 'Low' | 'Medium' | 'High';
 export interface UserInputs {
   sector: string;
-  revenue: string;
+  revenue: RevenueBand;
   maturity: number; // 1-5
   objective: StrategicObjective;
   painPoints: string[];
@@ -16,30 +17,47 @@ export function calculatePriorities(inputs: UserInputs, useCases: UseCase[]): Sc
   return useCases.map(uc => {
     let alignmentScore = 0;
     let matchReason = "";
-    // Strategic Alignment (Objective Match)
+    // 1. Strategic Alignment (40 points max)
     if (uc.strategicTags.includes(inputs.objective)) {
       alignmentScore += 40;
       matchReason = `High alignment with your core goal of ${inputs.objective}. `;
     }
-    // Maturity Fit logic
-    // Firms with low maturity (1-2) are penalized for high complexity tools
-    // Firms with high maturity (4-5) get a bonus for high complexity (competitive advantage)
-    let feasibilityScore = (10 - uc.complexity) * 5; // Base feasibility
-    const complexityGap = uc.complexity - (inputs.maturity * 2); 
-    if (complexityGap > 2) {
-      feasibilityScore -= 20; // Too complex for maturity
-      matchReason += "Requires higher digital maturity than currently reported. ";
+    // 2. Maturity & Complexity Fit (30 points base)
+    // Complexity is 1-10. Maturity is 1-5 (scaled to 2-10).
+    const scaledMaturity = inputs.maturity * 2;
+    const complexityGap = uc.complexity - scaledMaturity;
+    let feasibilityScore = (10 - uc.complexity) * 3; // Base feasibility (0-30)
+    if (complexityGap > 3) {
+      // Significant Penalty for low maturity firms attempting high complexity
+      feasibilityScore -= 25;
+      matchReason += "Current digital maturity creates high implementation risk. ";
+    } else if (complexityGap > 0) {
+      // Minor Penalty
+      feasibilityScore -= 10;
+      matchReason += "Will require significant process training. ";
     } else if (inputs.maturity >= 4 && uc.complexity >= 7) {
-      feasibilityScore += 15; // High maturity firms can handle complex high-reward tools
-      matchReason += "Leverages your advanced digital capabilities. ";
+      // Bonus for high maturity firms tackling complex items (Competitive Advantage)
+      feasibilityScore += 15;
+      matchReason += "Leverages your advanced technical leadership. ";
     }
-    // Revenue Factor (Simplification: Higher revenue firms value risk mitigation and large scale ROI more)
-    const roiScore = uc.baseROI * 5;
-    const totalScore = Math.min(100, Math.max(0, alignmentScore + feasibilityScore + roiScore));
+    // 3. Base ROI & Scale Factor (30 points base)
+    let valueScore = uc.baseROI * 3;
+    // Scale Bonus: High revenue firms value Risk Mitigation and Margin Expansion more due to scale of impact
+    if (inputs.revenue === 'High') {
+      if (uc.strategicTags.includes('Risk Mitigation') || uc.strategicTags.includes('Margin Expansion')) {
+        valueScore += 10;
+        matchReason += "High revenue scale amplifies potential savings/mitigation. ";
+      }
+    } else if (inputs.revenue === 'Low' && uc.complexity <= 4) {
+      // Low revenue firms value quick wins (Low complexity)
+      valueScore += 10;
+      matchReason += "Ideal quick-win for your organization size. ";
+    }
+    const totalScore = Math.min(100, Math.max(0, alignmentScore + feasibilityScore + valueScore));
     return {
       ...uc,
-      score: totalScore,
-      matchReason: matchReason.trim() || "General performance improvement across standard metrics.",
+      score: Math.round(totalScore),
+      matchReason: matchReason.trim() || "Balanced tactical improvement.",
       alignment: alignmentScore,
       feasibility: feasibilityScore
     };
