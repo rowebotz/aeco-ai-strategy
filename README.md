@@ -81,7 +81,7 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/rowebotz/aeco-ai-strategy.git
-cd aeco-ai-strategy
+cd aeco-ai-strategy ```
 
 ---
 
