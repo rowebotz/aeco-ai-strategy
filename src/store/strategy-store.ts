@@ -67,19 +67,36 @@ export const useStrategyStore = create<StrategyState>((set, get) => ({
   },
   setComparisonMode: (active) => set({ comparisonMode: active }),
   reset: (preserveProfile = false) => {
-    const profile = preserveProfile ? { 
-      sector: get().inputs.sector, 
-      revenue: get().inputs.revenue, 
-      maturity: get().inputs.maturity 
-    } : {};
-    const newInputs = { ...defaultInputs, ...profile };
-    set({ 
-      inputs: newInputs, 
-      scoredCases: [], 
-      isAnalyzed: false, 
-      comparisonMode: false,
-      baselineScenario: preserveProfile ? get().baselineScenario : null
-    });
-    localStorage.removeItem(STORAGE_KEY);
+    if (preserveProfile) {
+      const currentInputs = get().inputs;
+      const currentBaseline = get().baselineScenario;
+      const profile = {
+        sector: currentInputs.sector,
+        revenue: currentInputs.revenue,
+        maturity: currentInputs.maturity
+      };
+      const newInputs = { ...defaultInputs, ...profile };
+      set({
+        inputs: newInputs,
+        scoredCases: [],
+        isAnalyzed: false,
+        comparisonMode: false,
+        baselineScenario: currentBaseline
+      });
+      // Update storage with preserved profile and existing baseline
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        inputs: newInputs,
+        baselineScenario: currentBaseline
+      }));
+    } else {
+      set({
+        inputs: defaultInputs,
+        scoredCases: [],
+        isAnalyzed: false,
+        comparisonMode: false,
+        baselineScenario: null
+      });
+      localStorage.removeItem(STORAGE_KEY);
+    }
   }
 }));
