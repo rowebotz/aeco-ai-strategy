@@ -178,9 +178,9 @@ export function HomePage() {
         </AnimatePresence>
       </main>
       <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-200 mt-12 print:hidden">
-        <div className="flex justify-between items-center text-xs text-muted-foreground font-mono">
-          <span>Stephen Rowe's Autodesk AI Strategy Prototype</span>
-          <span className="hidden sm:inline">PRO Version 1.2</span>
+        <div className="text-sm text-muted-foreground font-mono flex items-center gap-2">
+          Stephen Rowe's Autodesk AI Job Application |&nbsp;
+          <a href="https://www.digitalrowe.com" target="_blank" rel="noreferrer" className="underline hover:text-electricBlue transition-colors">digitalrowe.com</a>
         </div>
       </footer>
     </div>
