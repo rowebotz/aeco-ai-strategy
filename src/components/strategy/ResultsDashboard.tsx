@@ -27,7 +27,11 @@ export function ResultsDashboard() {
     const a = document.createElement('a');
     a.href = url;
     a.download = `AECO-AI-Strategy-Export-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
+    // Release the memory allocated to the URL object
+    window.URL.revokeObjectURL(url);
   };
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -71,14 +75,27 @@ export function ResultsDashboard() {
           <div className="h-[350px] w-full mt-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} layout="vertical" aria-label="Strategy Score Bar Chart">
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#eee" />
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                 <XAxis type="number" domain={[0, 100]} hide />
-                <YAxis dataKey="name" type="category" width={140} tick={{ fontSize: 10, fill: '#1F1F23', fontWeight: 600 }} />
-                <Tooltip
-                   cursor={{ fill: 'rgba(0,120,212,0.05)' }}
-                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                <YAxis 
+                  dataKey="name" 
+                  type="category" 
+                  width={140} 
+                  tick={{ fontSize: 11, fill: '#1F1F23', fontWeight: 600, fontFamily: 'Inter' }}
+                  axisLine={false}
+                  tickLine={false}
                 />
-                <Bar dataKey="score" radius={[0, 4, 4, 0]} barSize={20}>
+                <Tooltip
+                   cursor={{ fill: 'rgba(31, 31, 35, 0.03)' }}
+                   contentStyle={{ 
+                     borderRadius: '8px', 
+                     border: '1px solid #e5e7eb', 
+                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                     padding: '8px 12px'
+                   }}
+                   itemStyle={{ fontWeight: '600', color: '#1F1F23' }}
+                />
+                <Bar dataKey="score" radius={[0, 4, 4, 0]} barSize={24}>
                   {chartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={index < 3 ? '#0078D4' : '#00A3A3'} />
                   ))}
@@ -107,7 +124,7 @@ export function ResultsDashboard() {
               </TableHeader>
               <TableBody>
                 {scoredCases.slice(0, 10).map((uc, i) => (
-                  <TableRow key={uc.id} className="group">
+                  <TableRow key={uc.id} className="group transition-colors hover:bg-slate-50">
                     <TableCell className="font-mono text-[11px] text-muted-foreground">{i + 1}</TableCell>
                     <TableCell>
                       <div className="font-bold text-xs text-charcoal">{uc.title}</div>

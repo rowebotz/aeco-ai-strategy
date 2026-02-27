@@ -18,15 +18,20 @@ export function calculatePriorities(inputs: UserInputs, useCases: UseCase[]): Sc
     let alignmentScore = 0;
     let matchReason = "";
     // 1. Strategic Alignment (40 points max)
-    if (uc.strategicTags.includes(inputs.objective)) {
-      alignmentScore += 40;
+    // Ensure uc.strategicTags is handled gracefully even if undefined or empty
+    const tags = uc.strategicTags ?? [];
+    if (tags.includes(inputs.objective)) {
+      alignmentScore = 40;
       matchReason = `High alignment with your core goal of ${inputs.objective}. `;
+    } else if (tags.length === 0) {
+      matchReason = "Broad application initiative. ";
     }
-    // 2. Maturity & Complexity Fit (30 points base)
+    // 2. Maturity & Complexity Fit (30 points max)
     // Complexity is 1-10. Maturity is 1-5 (scaled to 2-10).
     const scaledMaturity = inputs.maturity * 2;
     const complexityGap = uc.complexity - scaledMaturity;
-    let feasibilityScore = (10 - uc.complexity) * 3; // Base feasibility (0-30)
+    // Base feasibility: scale 10-complexity (range 0-9) to 0-30 points
+    let feasibilityScore = Math.max(0, (10 - uc.complexity) * 3); 
     if (complexityGap > 3) {
       // Significant Penalty for low maturity firms attempting high complexity
       feasibilityScore -= 25;
@@ -40,23 +45,28 @@ export function calculatePriorities(inputs: UserInputs, useCases: UseCase[]): Sc
       feasibilityScore += 15;
       matchReason += "Leverages your advanced technical leadership. ";
     }
-    // 3. Base ROI & Scale Factor (30 points base)
-    let valueScore = uc.baseROI * 3;
-    // Scale Bonus: High revenue firms value Risk Mitigation and Margin Expansion more due to scale of impact
+    // Clamp component to its reasonable range contribution
+    feasibilityScore = Math.min(30, Math.max(-25, feasibilityScore));
+    // 3. Base ROI & Scale Factor (30 points base + 10 points bonus)
+    let valueScore = Math.min(30, uc.baseROI * 3);
+    // Scale Bonus
+    let scaleBonus = 0;
     if (inputs.revenue === 'High') {
-      if (uc.strategicTags.includes('Risk Mitigation') || uc.strategicTags.includes('Margin Expansion')) {
-        valueScore += 10;
+      if (tags.includes('Risk Mitigation') || tags.includes('Margin Expansion')) {
+        scaleBonus = 10;
         matchReason += "High revenue scale amplifies potential savings/mitigation. ";
       }
     } else if (inputs.revenue === 'Low' && uc.complexity <= 4) {
       // Low revenue firms value quick wins (Low complexity)
-      valueScore += 10;
+      scaleBonus = 10;
       matchReason += "Ideal quick-win for your organization size. ";
     }
-    const totalScore = Math.min(100, Math.max(0, alignmentScore + feasibilityScore + valueScore));
+    // Calculate total and clamp to executive 0-100 range
+    const totalScore = alignmentScore + feasibilityScore + valueScore + scaleBonus;
+    const clampedScore = Math.min(100, Math.max(0, totalScore));
     return {
       ...uc,
-      score: Math.round(totalScore),
+      score: Math.round(clampedScore),
       matchReason: matchReason.trim() || "Balanced tactical improvement.",
       alignment: alignmentScore,
       feasibility: feasibilityScore
